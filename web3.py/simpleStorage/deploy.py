@@ -26,14 +26,18 @@ compiled_sol = compile_standard(
     solc_version="0.8.7",
 )
 
-with open("compiled_code.json", "w") as file:
+with open("./web3.py/simpleStorage/compiled_code.json", "w") as file:
     json.dump(compiled_sol, file)
 
 # get bytecode
 bytecode = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["evm"]["bytecode"]["object"]
+with open("./web3.py/simpleStorage/bytecode.json", "w") as file:
+    json.dump(bytecode, file)
 
 # get abi
 abi = compiled_sol["contracts"]["SimpleStorage.sol"]["SimpleStorage"]["abi"]
+with open("./web3.py/simpleStorage/abi.json", "w") as file:
+    json.dump(abi, file)
 
 # for connecting to testnet
 w3 = Web3(Web3.HTTPProvider("http://localhost:7545"))
@@ -61,3 +65,7 @@ transaction_hash = w3.eth.send_raw_transaction(
 
 # wait for complete transaction
 transaction_receipt = w3.eth.wait_for_transaction_receipt(transaction_hash)
+print("Contract %s has been created" % transaction_receipt.contractAddress)
+# get contract address
+with open("./web3.py/simpleStorage/contract_address", "w") as file:
+    file.write(transaction_receipt.contractAddress)
